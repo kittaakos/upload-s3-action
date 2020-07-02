@@ -1,3 +1,4 @@
+// @ts-check
 const core = require('@actions/core');
 const S3 = require('aws-sdk/clients/s3');
 const fs = require('fs');
@@ -34,7 +35,7 @@ const paths = klawSync(SOURCE_DIR, {
 function upload(params) {
   return new Promise(resolve => {
     s3.upload(params, (err, data) => {
-      if (err) core.error(err);
+      if (err) core.error(err.message);
       core.info(`uploaded - ${data.Key}`);
       core.info(`located - ${data.Location}`);
       resolve(data.Location);
@@ -63,7 +64,7 @@ run()
     core.info(`object key - ${objKey}`);
     core.info(`object locations - ${locations}`);
     core.setOutput('object_key', objKey);
-    core.setOutput('object_locations', locations);
+    core.setOutput('object_locations', JSON.stringify(locations));
   })
   .catch(err => {
     core.error(err);
