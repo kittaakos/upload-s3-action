@@ -2394,6 +2394,7 @@ AWS.EC2MetadataCredentials = AWS.util.inherit(AWS.Credentials, {
 /***/ 104:
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
+// @ts-check
 const core = __webpack_require__(470);
 const S3 = __webpack_require__(777);
 const fs = __webpack_require__(747);
@@ -2430,7 +2431,7 @@ const paths = klawSync(SOURCE_DIR, {
 function upload(params) {
   return new Promise(resolve => {
     s3.upload(params, (err, data) => {
-      if (err) core.error(err);
+      if (err) core.error(err.message);
       core.info(`uploaded - ${data.Key}`);
       core.info(`located - ${data.Location}`);
       resolve(data.Location);
@@ -2459,7 +2460,7 @@ run()
     core.info(`object key - ${objKey}`);
     core.info(`object locations - ${locations}`);
     core.setOutput('object_key', objKey);
-    core.setOutput('object_locations', locations);
+    core.setOutput('object_locations', JSON.stringify(locations));
   })
   .catch(err => {
     core.error(err);
